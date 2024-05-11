@@ -3,12 +3,14 @@ import axios from 'axios';
 import { ref } from 'vue';
 
 /* Inseriamo in una variabile reattiva chiamata data */
-const data = ref(0);
+const dataDB = ref(0);
+const dataREST = ref(0);
 
-/* Inseriamo nella variabile data il risultato della chiamata al backend */
+
+/* Recupero da DB - Inseriamo nella variabile data il risultato della chiamata al backend */
 axios.get("/api/testMysql").then(response => {
- console.log(JSON.stringify(response.data))
- data.value = response.data
+ console.log(response.data)
+ dataDB.value = response.data
  })
  class MyTable{
   "id": number;
@@ -16,30 +18,37 @@ axios.get("/api/testMysql").then(response => {
  }
 
 
+/* Chiamata a REST - Inseriamo nella variabile data il risultato della chiamata al backend */
+axios.get("/api/callREST").then(response => {
+ console.log(response.data)
+ dataREST.value = response.data
+ })
+ class MyREST{
+  "id": number;
+  "description": string;
+ }
+
 </script>
 
 <template>
   <div>
-    <table>
-      <tr v-for="items in data" >
+    <table class="backendTable">
+      <th span="2">Recupero dati da DB</th>
+      <tr v-for="items in dataDB" >
         <td>{{ items.id }}</td>
         <td>{{ items.description }}</td>
       </tr>
     </table>
-    
+  </div>
+  <div class="backendTable">
+    <table>
+      <th span="2">Recupero dati da REST</th>
+      <tr v-for="items in dataREST" >
+        <td>{{ items.id }}</td>
+        <td>{{ items.description }}</td>
+      </tr>
+    </table>
   </div>
 </template>
 
-<style scoped>
-h1 {
-  font-weight: 500;
-  font-size: 2.6rem;
-  position: relative;
-  top: -10px;
-}
 
-h3 {
-  font-size: 1.2rem;
-}
-
-</style>
